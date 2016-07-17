@@ -41,6 +41,43 @@ def index():
     current_session = session.get('user_id', None)
     return render_template("homepage.html")
 
+@app.route('/login', methods=['POST'])
+def login():
+    """ Processes login. """
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash ("We can't find you! Please register!")
+        return redirect('/registration')
+
+    if user.password != password:
+        flash("Password is negatory, so srry. Please try again!")
+        return redirect('/login')
+
+    session["user_id"] = user.user_id
+
+    return redirect('/feed')
+
+@app.route('/register', methods=['GET'])
+def registration_form():
+    """ registration form. """
+
+    return render_template("registration.html")
+
+@app.route('/register', methods=['POST'])
+def register():
+    """ get form variables from registration form. """
+
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    age = request.form.get("age")
+
 
 
 

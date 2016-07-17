@@ -40,6 +40,7 @@ class User(db.Model):
 
         return "<User user_id={} email={}>".format(self.user_id, self.email)
 
+
 class Images(db.Model):
     """ Stores user images that have been uploaded. """
 
@@ -59,7 +60,6 @@ class Images(db.Model):
         return "<Images image_id={} likes={} caption={}".format(self.image_id,
                                                                 self.likes,
                                                                 self.caption)
-
 
 class Relations(db.Model):
     """ Connect two users to establish a friendship and allow for content viewing. """
