@@ -85,7 +85,30 @@ def register():
     db.session.commit()
 
     flash("Welcome {} {}!".format(first_name, last_name))
-    return redirect('/')
+    return redirect('/user_name')
+
+@app.route('/user_name', methods=['GET'])
+def user_name_render():
+    """ Renders template for create username. """
+
+    return render_template("user_name_create.html")
+
+@app.route('/user_name', methods=['POST'])
+def user_name_post():
+    """ Gets form variables from username create page. """
+
+    username = request.form.get("username")
+
+    username_taken = User.query.filter_by(username=username).first()
+
+    if username not in username_taken:
+        flash("Success!")
+        return redirect('/login')
+
+    else:
+        flash("Oh no! That name is already being used! Pls try again!")
+
+
 
 @app.route('/logout')
 def logout():
