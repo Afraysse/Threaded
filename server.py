@@ -78,7 +78,7 @@ def login():
 
     flash("Hello {}. You have successfully logged in!").format(current_user.first_name), "success")
     
-    return redirect("/users/{}".format(current_user.user_id))
+    return redirect("/dashboard/{}".format(current_user.user_id))
 
 @app.route('/register', methods=['GET'])
 def registration_form():
@@ -92,18 +92,45 @@ def register():
 
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
-    email = request.form.get("email")
-    password = request.form.get("password")
+    signup_email = request.form.get("signup_email")
+    signup_password = request.form.get("signup_password")
     age = request.form.get("age")
 
-    new_user = User(first_name=first_name, last_name=last_name, email=email,
-                    password=password, age=age)
+    # check to ensure signup email doesn't already exist
+    # if email does not exist, create new user
+    # if email does exist, flash message to ask for a login 
 
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        db.session.query(User).filter(User.email == signup_email).one()
 
-    flash("Welcome {} {}!".format(first_name, last_name))
-    return redirect('/user_name')
+    except NoResultFound:
+        new_user = User(first_name=first_name,
+                        last_name=last_name,
+                        email=signup_email,
+                        password=signup_password,
+                        age=age)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+   # add same info to session similar to login route 
+
+        session["current_user"] = {
+            "first_name": new_user.first_name,
+            "user_id": new_user.user_id,
+            "receieved_request_count": 0,
+            "sent_request_count": 0,
+            "total_request_count": 0
+        }
+
+        flash("You have successfully signed up for an account and are now logged in.", "success")
+
+        return redirect("/dashboard/%s" % new_user.user_id)
+
+    flash("Opps! We already have that email on record. Please login!", "Danger Will Robinson!")
+
+    return redirect("/login")
+
 
 @app.route('/user_name', methods=['GET'])
 def user_name_render():
