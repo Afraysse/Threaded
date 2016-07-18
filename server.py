@@ -78,6 +78,23 @@ def register():
     password = request.form.get("password")
     age = request.form.get("age")
 
+    new_user = User(first_name=first_name, last_name=last_name, email=email,
+                    password=password, age=age)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash("Welcome {} {}!".format(first_name, last_name))
+    return redirect('/')
+
+@app.route('/logout')
+def logout():
+    """ Log out user. """
+
+    del session["user_id"]
+    flash("Goodbye! Stop in again soon!")
+    return redirect("/")
+
 
 
 
