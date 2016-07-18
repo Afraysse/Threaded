@@ -45,22 +45,40 @@ def index():
 def login():
     """ Processes login. """
 
-    email = request.form.get("email")
-    password = request.form.get("password")
+    login_email = request.form.get("login_email")
+    login_password = request.form.get("login_password")
 
-    user = User.query.filter_by(email=email).first()
+    # try to see if credentials put in work
+    # if incorrect, ask to try again 
+    # if correct, log in user and store to session and grab friend information 
+    try:
+        current_user = db.session.query(User).filter(User.email == login_email,
+                                                    User.password == login_password).one()
 
-    if not user:
-        flash ("We can't find you! Please register!")
-        return redirect('/registration')
-
-    if user.password != password:
-        flash("Password is negatory, so srry. Please try again!")
+    except NoResultFound:
+        flash("We can't seem to find you! Please try again.", "Danger Will Robinson!")
         return redirect('/login')
 
-    session["user_id"] = user.user_id
+    # Acquire current user's friend information to display in badges on page
 
-    return redirect('/feed')
+    received_friend_requests, sent_friend_requests = get_friend_requests(current_user.user_id)
+    receieved_request_count = len(received_friend_requests)
+    sent_request_count = len(sent_friend_requests)
+    total_request_count = receieved_request_count + sent_request_count
+
+    # a nested dictionary stores more to the session than simply the user_id
+
+    session["current_user"] = {
+        "first_name": current_user.first_name,
+        "user_id": current_user.user_id,
+        "receieved_request_count": receieved_request_count,
+        "sent_request_count": sent_request_count,
+        "total_request_count": total_request_count
+    }
+
+    flash("Hello {}. You have successfully logged in!").format(current_user.first_name), "success")
+    
+    return redirect("/users/{}".format(current_user.user_id))
 
 @app.route('/register', methods=['GET'])
 def registration_form():
@@ -99,7 +117,7 @@ def user_name_post():
 
     username = request.form.get("username")
 
-    username_taken = User.query.filter_by(username=username).first()
+    username_taken = User.query.filter_by(username=username).all()
 
     if username not in username_taken:
         flash("Success!")
@@ -107,7 +125,6 @@ def user_name_post():
 
     else:
         flash("Oh no! That name is already being used! Pls try again!")
-
 
 
 @app.route('/logout')
