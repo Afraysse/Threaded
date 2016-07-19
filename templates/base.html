@@ -1,9 +1,102 @@
 <!DOCTYPE html>
 <html lang="eng">  
 <head>
-    <title>Threaded</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Threaded || {% block title %} put title here {% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
+
+
 <body>
+
+    <!-- Navigation Bar --> 
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+
+            <!-- Brand and toggle for mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if session.get('current_user') %}
+                    <a href="/dashboard/{{ session.current_user.user_id }}"><button id="brand-logo"><img src="/static/img/--">threaded</button></a>
+                {% else %}
+                    <a href="/"><button id="brand-logo"><img src="static/img/--">threaded</button></a>
+                {% endif %}
+            </div><!-- /.navbar-header --> 
+
+            <!-- Collect the nav links, forms and other content for toggle -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                {% if session.get('current_user') %}
+                    <ul class="nav navbar-nav">
+                        <li><a href="/profile/{{ session.current_user.user_id }}">Profile</a></li>
+                        <li><a href="/friends">Friends<span class="badge">{{ session.current_user.total_request_count }}</span></a></li>
+                    </ul>
+                <!-- Searchbox feature for writing or authors --> 
+                <form class="navbar-form navbar-left" role="search" action="/users/search">
+                    <div class="input-group">
+                        <input class="form-control" id="searchbox" type="search" name="q" aria-label="Find Author" placeholder="Find an author by name or username">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+                </form>
+            {% else %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/registration">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            {% endif %}
+        </div><!-- /.navbar-collapse --> 
+    </div><!-- /.container -->
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true %}
+    {% if messages %}
+        <!-- Display flashed messages if any --> 
+        <div class="container-fluid flash-messages">
+            {% for category, message in messages %}
+                <div class="container alert alert-{{ category }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %} put content here {% endblock %}
+
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
 
 {% block content %}
 {% endblock %}
