@@ -1,8 +1,84 @@
-{% extends 'base.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Threaded || {% block title %} put title here {% endblock %}</title>
 
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
 <body>
+<div class="jumbotron" id="cover">
+    <div class="container">
+        <h1>threaded</h1>
+        <p class="site-description indent">
+            black and white and read all over. 
+            <br>
+            if it's not a newspaper, it's <b><i>threaded</i></b>. 
+        </p> 
+        <br>
+        <br>
+        <div class="container" id="main-section">
+        <div class="panel panel-default login-signup">
+            <br> 
+            <div class="panel-body">
+                <form action="/login" method="post">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" class="form-control" name="login-email" placeholder="example@gmail.com" required autofocus>
+                        <br>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" name="login-password" placeholder="***********" required>
+                    <br>
+                    <button class="btn btn-lr btn-primary btn-block btn-homepage" type="submit">Login</button>
+                </form>
+                <br>
+                <p><h5>
+                    Dost thou wish to thread? <a href="/register"> Register thyself!</a>
+                </h5></p>
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+    </div><!-- /.container -->
+    </div><!-- /.container -->
+    <br>
+    <br>
+</div><!-- /.jumbotron -->
 
+<!-- Footer --> 
+<footer class="footer">
+    <div class="container">
+        <p class="footer-copyright">threaded &copy; 2016.</p>
+    </div>
+</footer>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
-{% endblock %}
 </html>
+
+
+
+
+
+
+
+
+

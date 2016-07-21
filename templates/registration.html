@@ -1,7 +1,79 @@
-{% extends 'base.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Threaded || {% block title %} put title here {% endblock %}</title>
 
-<body>
-{% endblock %}
-</body>
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<br>
+<br>
+<br>
+<br>
+<div class="container" id="main-section">
+    <div class="panel panel-default login-signup">
+        <div class="panel-heading">
+                <h1 class="panel-title">Register</h1>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body">
+            <form action="/register" method="post">
+                <label for="email"> Email address </label>
+                <input for="email" class="form-control" id="email" name="signup_email" placeholder="example@gmail.com" required autofocus>
+                    <br>
+                <label for="password"> Password </label>
+                <input type="password" class="form-control" id="password" name="signup_password" placeholder="************" required>
+                    <br>
+                <label for="firstname"> First name</label>
+                <input type="text" class="form-control" id="firstname" name="first_name" placeholder="Happy" required>
+                    <br>
+                <label for="lastname"> Last name</label>
+                <input type="text" class="form-control" id="lastname" name="last_name" placeholder="Muffin" required>
+                    <br>
+                <label for="age">Age</label>
+                <input type="text" class="form-control" id="age" name="age" placeholder="34" required>
+                    <br>
+            <button class="btn btn-lg btn-primary btn-block btn-homepage" type="submit">Sign Up!</button>
+        </form>
+        <br>
+            <p>
+                Forgot you already have an account? <a href="/"> Login here!</a>
+            </p>
+        </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+<div><!-- /.container -->
+
+<!-- Footer --> 
+<footer class="footer">
+    <div class="container">
+        <p class="footer-copyright">threaded &copy; 2016.</p>
+    </div>
+</footer>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 </html>
+
+
+
+

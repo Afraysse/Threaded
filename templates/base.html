@@ -23,7 +23,6 @@
     <![endif]-->
 </head>
 
-
 <body>
 
     <!-- Navigation Bar --> 
@@ -71,7 +70,7 @@
     </div><!-- /.container -->
 </nav>
 
-{% with messages = get_flashed_messages(with_categories=true %}
+{% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <!-- Display flashed messages if any --> 
         <div class="container-fluid flash-messages">
@@ -84,6 +83,8 @@
         </div>
         {% endif %}
     {% endwith %}
+    <br>
+    <br>
 
     {% block content %} put content here {% endblock %}
 
@@ -96,9 +97,5 @@
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-
-
-{% block content %}
-{% endblock %}
 
 </body>

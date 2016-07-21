@@ -20,6 +20,15 @@ make_searchable()
 ############################################################
 # db tables for Model.py
 
+""" 
+Association table to establish followers and followed by each user.
+IS NOT A MODEL --> keep in mind for syntax.
+"""
+
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.user_id')),
+    db.Column('followed_id'), db.Integer, db.ForeignKey('user.user_id'))
+
 class User(db.Model):
     """ Contains user information. """
 
@@ -31,6 +40,14 @@ class User(db.Model):
     email = db.Column(db.String(60), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     username = db.Column(db.String(20), nullable=False)
+    followed = db.relationship('User',
+                                secondary=followers,
+                                primaryjoin=(followers.c.follower_id == user_id),
+                                secondaryjoin=(followers.c.followed_id == user_id),
+                                backref=db.backref('followers', lazy='dynamic'),
+
+                                lazy='dynamic')
+
     # created_at = db.Column()
 
     # Put name inside TSVectorType definition for it to be fulltext-indexed (searchable)
@@ -61,27 +78,6 @@ class Images(db.Model):
                                                                 self.likes,
                                                                 self.caption)
 
-class Relations(db.Model):
-    """ Connect two users to establish a friendship and allow for content viewing. """
-
-    __tablename__ = "relations"
-
-    relations_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_a_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    user_b_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    status = db.Column(db.String(300), nullable=False)
-
-    # Define relations between users
-    user_a_id = db.relationship("User", foreign_keys=[user_a_id], backref=db.backref("user"))
-    user_b_id = db.relationship("User", foreign_keys=[user_b_id], backref=db.backref("user"))
-
-    def __repr__(self):
-        """ Provide helpful representation when printed. """
-
-        return "<Relations relations_id=%s user_a_id=%s user_b_id=%s status=%s>" % (self.relations_id,
-                                                                                    self.user_a_id,
-                                                                                    self.user_b_id,
-                                                                                    self.status)
 class OwnedThreads(db.Model):
     """ Contains owned thread information per user. """
 
@@ -89,7 +85,6 @@ class OwnedThreads(db.Model):
 
     owned_thread_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    contributer_thread_id = db.Column(db.Integer, db.ForeignKey('contributer_threads.contributer_thread_id'))
     title = db.Column(db.String(100), nullable=False)
     text = db.Column(db.String(600), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
@@ -101,9 +96,6 @@ class OwnedThreads(db.Model):
 
     user = db.relationship("User", backref=db.backref("owned_threads", order_by=user_id))
 
-    # Define relationship to ParticipantThreads
-
-    contributers = db.relationship("ContributerThreads", backref=db.backref("owned_threads", order_by=contributer_thread_id))
 
     def __repr__(self):
 
@@ -117,7 +109,6 @@ class ContributerThreads(db.Model):
 
     contributer_thread_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    owned_thread_id = db.Column(db.Integer, db.ForeignKey('owned_threads.owned_thread_id'))
     text = db.Column(db.String(100), nullable=False)
     date_submitted = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     likes = db.Column(db.Integer, nullable=True)
@@ -125,10 +116,6 @@ class ContributerThreads(db.Model):
     # Define relationship to User
 
     user = db.relationship("User", backref=db.backref("contributer_threads", order_by=user_id))
-
-    # Define relationship to OwnedThreads
-
-    owned = db.relationship("OwnedThreads", backref=db.backref("contributer_threads", order_by=owned_thread_id))
 
 
     def __repr__(self):

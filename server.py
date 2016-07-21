@@ -15,7 +15,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, flash, redirect, request, jsonify, url_for, session
 from flask_debugtoolbar import DebugToolbarExtension 
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Images, Relations, OwnedThreads, ContributerThreads
 
 # Import SQLAlchemy exception error to use in try/except
 from sqlalchemy.orm.exc import NoResultFound
@@ -40,6 +40,12 @@ def index():
 
     current_session = session.get('user_id', None)
     return render_template("homepage.html")
+
+@app.route('/login', methods=['GET'])
+def login_form():
+    """ login form. """
+
+    return render_template("login.html")
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -76,7 +82,7 @@ def login():
         "total_request_count": total_request_count
     }
 
-    flash("Hello {}. You have successfully logged in!").format(current_user.first_name), "success")
+    flash("Hello {}. You have successfully logged in!").format(current_user.first_name)
     
     return redirect("/dashboard/{}".format(current_user.user_id))
 
@@ -85,6 +91,7 @@ def registration_form():
     """ registration form. """
 
     return render_template("registration.html")
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -125,7 +132,9 @@ def register():
 
         flash("You have successfully signed up for an account and are now logged in.", "success")
 
-        return redirect("/dashboard/%s" % new_user.user_id)
+        return redirect("/user_name")
+
+        # return redirect("/dashboard/%s" % new_user.user_id)
 
     flash("Opps! We already have that email on record. Please login!", "Danger Will Robinson!")
 
@@ -161,6 +170,7 @@ def logout():
     del session["user_id"]
     flash("Goodbye! Stop in again soon!")
     return redirect("/")
+
 
 
 
