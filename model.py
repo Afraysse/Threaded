@@ -20,14 +20,6 @@ make_searchable()
 ############################################################
 # db tables for Model.py
 
-""" 
-Association table to establish followers and followed by each user.
-IS NOT A MODEL --> keep in mind for syntax.
-"""
-
-followers = db.Table('followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.user_id')),
-    db.Column('followed_id'), db.Integer, db.ForeignKey('user.user_id'))
 
 class User(db.Model):
     """ Contains user information. """
@@ -37,18 +29,9 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(60), nullable=False)
+    email = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(20), nullable=False)
-    followed = db.relationship('User',
-                                secondary=followers,
-                                primaryjoin=(followers.c.follower_id == user_id),
-                                secondaryjoin=(followers.c.followed_id == user_id),
-                                backref=db.backref('followers', lazy='dynamic'),
-
-                                lazy='dynamic')
-
-    # created_at = db.Column()
+    password = db.Column(db.String, nullable=False)
 
     # Put name inside TSVectorType definition for it to be fulltext-indexed (searchable)
     search_vector = db.Column(TSVectorType('first_name', 'last_name'))
@@ -56,6 +39,48 @@ class User(db.Model):
     def __repr__(self):
 
         return "<User user_id={} email={}>".format(self.user_id, self.email)
+
+    # for new users to insert into user table 
+    @classmethod
+    def add_new_user(cls, first_name, last_name, email, age, password=None):
+
+        new_user = cls(first_name=first_name,
+                        last_name=last_name,
+                        email=email,
+                        age=age,
+                        password=password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+
+class Connections(db.Model):
+    """ Establishes relationship between users. """
+
+    __tablename__ = 'connection'
+
+    connection_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    control_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    connector_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+
+    user = db.relationship("User",
+                            primaryjoin="User.user_id == Connections.control_id",
+                            backref=db.backref("Connections",
+                                                order_by=connection_id))
+
+    def __repr__(self):
+
+        return ("Connection between control_id: \
+                %s and connector_id: %s>") % (self.control_id,
+                                            self.connector_id)
+
+    @classmethod
+    def add_connection(cls, control_id, connector_id):
+
+        new_connection = cls(control_id=control_id, connector_id=connector_id)
+        db.session.add(new_connection)
+        db.session.commit()
+
 
 
 class Images(db.Model):

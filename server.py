@@ -1,5 +1,5 @@
 """
-OpenBook 2.0
+Threaded 2.0
 
 A creative space for thread writing. A a single user or party of users create a thread 
 and  dependent upon the settings of the thread - whether the thread is made public or 
@@ -15,7 +15,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, flash, redirect, request, jsonify, url_for, session
 from flask_debugtoolbar import DebugToolbarExtension 
 
-from model import connect_to_db, db, User, Images, Relations, OwnedThreads, ContributerThreads
+from model import connect_to_db, db, User, Images, Connections, OwnedThreads, ContributerThreads
 
 # Import SQLAlchemy exception error to use in try/except
 from sqlalchemy.orm.exc import NoResultFound
