@@ -132,7 +132,7 @@ def register():
 
         flash("You have successfully signed up for an account and are now logged in.", "success")
 
-        return redirect("/user_name")
+        return redirect("/dashboard")
 
         # return redirect("/dashboard/%s" % new_user.user_id)
 
@@ -170,6 +170,18 @@ def logout():
     del session["user_id"]
     flash("Goodbye! Stop in again soon!")
     return redirect("/")
+
+
+@app.route('/dashboard', methods=['GET'])
+def dashboard_render():
+    """ Render dashboard template. """
+
+    return render_template("dashboard.html")
+
+@app.route('/dashboard', methods=['POST'])
+def dashboard_view():
+
+    pass
 
 
 

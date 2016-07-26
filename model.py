@@ -103,52 +103,69 @@ class Images(db.Model):
                                                                 self.likes,
                                                                 self.caption)
 
-class OwnedThreads(db.Model):
+class Trips(db.Model):
+    """ Contains trip information for mapping purposes. """
+
+    __tablename__ = "trip"
+
+    trip_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    trip_name = db.Column(db.String(600), nullablle=False)
+
+    user = db.relationship("User", backref=db.backref("threads", order_by=user_id))
+
+    def __repr__(self):
+
+        return "<Trips trip_id={} trip_name={}>".format(self.trip_id,
+                                                        self.trip_name)
+
+
+class Story(db.Model):
     """ Contains owned thread information per user. """
 
-    __tablename__ = "owned_threads"
+    __tablename__ = "stories"
 
-    owned_thread_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    story_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     title = db.Column(db.String(100), nullable=False)
     text = db.Column(db.String(600), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     public_or_private = db.Column(db.String, nullable=False)
-    live_or_closed = db.Column(db.String, nullable=False)
-    contributer_count = db.Column(db.Integer, nullable=True)
-
-    # Define relationship to User
-
-    user = db.relationship("User", backref=db.backref("owned_threads", order_by=user_id))
-
-
-    def __repr__(self):
-
-        return "<OwnedThreads owned_thread_id={} public_or_private={} live_or_closed={}>".format(self.owned_thread_id, 
-                                                                                        self.public_or_private, self.live_or_closed)
-
-class ContributerThreads(db.Model):
-    """ Contains contributed threads according to user on owned threads. """
-
-    __tablename__ = "contributer_threads"
-
-    contributer_thread_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    text = db.Column(db.String(100), nullable=False)
-    date_submitted = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     likes = db.Column(db.Integer, nullable=True)
+    comment_count = db.Column(db.Integer, nullable=True)
 
     # Define relationship to User
 
-    user = db.relationship("User", backref=db.backref("contributer_threads", order_by=user_id))
+    user = db.relationship("User", backref=db.backref("threads", order_by=user_id))
 
 
     def __repr__(self):
 
-        return "<ContributerThreads contributer_thread_id={} text={} date_submitted={} likes={}".format(self.contributer_thread_id,
-                                                                                                        self.text,
-                                                                                                        self.date_submitted,
-                                                                                                        self.likes)
+        return "<Story story_id={} public_or_private={}>".format(self.owned_thread_id, 
+                                                                self.public_or_private)
+
+# class ContributerThreads(db.Model):
+#     """ Contains contributed threads according to user on owned threads. """
+
+#     __tablename__ = "contributer_threads"
+
+#     contributer_thread_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+#     text = db.Column(db.String(100), nullable=False)
+#     date_submitted = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+#     likes = db.Column(db.Integer, nullable=True)
+
+#     # Define relationship to User
+
+#     user = db.relationship("User", backref=db.backref("contributer_threads", order_by=user_id))
+
+
+#     def __repr__(self):
+
+#         return "<ContributerThreads contributer_thread_id={} text={} date_submitted={} likes={}".format(self.contributer_thread_id,
+#                                                                                                         self.text,
+#                                                                                                         self.date_submitted,
+#                                                                                                         self.likes)
 
 ################################################################################
 
